@@ -1628,67 +1628,78 @@ clusterDomain: cluster.local
 
 knativeIntegration:
   # Version default
-  version: &defaultVersion "1.10.2"
+  # version: &defaultVersion "1.10.2"
+  defaultVersion: "1.10.2"
   enabled: true
   # Serving config
   knativeServing:
-    version: *defaultVersion
+    enabled: true  # in templates/knative-integration/operator.knative.serving.yaml check with function for both enabled options
+    name: knative-serving
     namespace: knative-serving
-    enabled: true
+    operatorSpec:
+      # version: *defaultVersion
+      version: 1.10.2
+      ingress:
+        istio:
+          enabled: true
+          knative-ingress-gateway:
+            selector:
+              # istio: ingressgateway
+              istio: cluster-local-gateway
+            servers:
+              - port:
+                  number: 80
+                  name: http
+                  protocol: HTTP
+                hosts:
+                - "*"
+          knative-local-gateway:
+            selector:
+              istio: cluster-local-gateway
+            servers:
+              - port:
+                  number: 80
+                  name: http
+                  protocol: HTTP
+                hosts:
+                - "*"
+      config:
+        # Note: The configuration options may be copied out of
+        # the example blocks, found in each of the supported KNative ConfigMaps.
+        # For more information, visit official knative operator documentation:
+        # https://knative.dev/docs/install/operator/configuring-with-operator/
+        istio:
+          gateway.knative-serving.knative-ingress-gateway: "istio-ingressgateway.istio-ingress.svc.cluster.local"
+          local-gateway.knative-serving.knative-local-gateway: "cluster-local-gateway.istio-ingress.svc.cluster.local"
+          external-gateways: |
+            - name: knative-ingress-gateway
+              namespace: knative-serving
+              service: istio-ingressgateway.istio-ingress.svc.cluster.local
+
+          local-gateways: |
+            - name: knative-local-gateway
+              namespace: knative-serving
+              service: cluster-local-gateway.istio-ingress.svc.cluster.local
+        autoscaler: {}
+        defaults: {}
+        deployment: {}
+        domain: {}
+          # example.com: ""
+        features: {}
+        gc: {}
+        leader: {}
+        logging: {}
+        network: {}
+        observability: {}
+        tracing: {}
+
 
   # Eventing config
   knativeEventing:
-    version: *defaultVersion
+    version: "1.10.2"
     namespace: knative-eventing
     enabled: false
 
   # Istio integration configuration
   istioIntegration:
     enabled: true
-    ingressGateway:
-      service: &ingressGatewayService "istio-ingressgateway.istio-system.svc.cluster.local"
-      selector: &ingressGatewaySelector
-        istio: ingressgateway
-    gateways:
-      # Attach to separate KNative ingress & local gateways
-      # - selector:
-      #     knative-ingress-gateway: *ingressGatewaySelector
-      #   binding:
-      #     gateway.knative-serving.knative-ingress-gateway: *ingressGatewayService
-      # - selector:
-      #     knative-local-gateway: *ingressGatewaySelector
-      #   binding:
-      #     local-gateway.knative-serving.knative-local-gateway: *ingressGatewayService
-
-      # Attach to Kubeflow gateway, as single ingress point for knative
-      - selector:
-          knative-ingress-gateway: *ingressGatewaySelector
-        binding:
-          gateway.kubeflow.kubeflow-gateway: *ingressGatewayService
-  # Setting ConfigMap values
-  # Warning: manually edited resources will be overwritten by operator values
-  config:
-    _example: |
-      # Note: The configuration options may be copied out of
-      # the example blocks, found in each of the supported KNative ConfigMaps.
-      # For more information, visit official knative operator documentation:
-      # https://knative.dev/docs/install/operator/configuring-with-operator/
-    domain:
-      example.com: ""
-      # prod.example.com: |
-      #   selector:
-      #     app: prod
-    autoscaler:
-      stable-window: 60s
-      max-scale-up-rate: "10.0"
-    defaults:
-      container-concurrency: "1"
-    deployment: {}
-    features: {}
-    gc: {}
-    istio: {}
-    leader: {}
-    logging: {}
-    network: {}
-    observability: {}
-    tracing: {}
