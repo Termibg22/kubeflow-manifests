@@ -15,12 +15,7 @@ spec:
   sources:
     - repoURL: https://github.com/knative/operator
       targetRevision: knative-v1.11.12
-      path: config/default
-      kustomize:
-        namespace: knative-operator
-        images:
-          - "ko://knative.dev/operator/cmd/operator=gcr.io/knative-releases/knative.dev/operator/cmd/operator:v1.11.12"
-          - "ko://knative.dev/operator/cmd/webhook=gcr.io/knative-releases/knative.dev/operator/cmd/webhook:v1.11.12"
+      path: config/charts/knative-operator
   ignoreDifferences:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
