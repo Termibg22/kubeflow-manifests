@@ -100,6 +100,15 @@ helm upgrade --install istio-ingressgateway gateway \
     --values "https://raw.githubusercontent.com/kromanow94/kubeflow-manifests/${TARGET_REVISION}/example/helm/values.istio-ingressgateway.yaml" \
     --wait
 
+# Istio Cluster Local Gateway #
+helm upgrade --install cluster-local-gateway gateway \
+    --namespace istio-ingress \
+    --create-namespace \
+    --repo https://istio-release.storage.googleapis.com/charts \
+    --version 1.20.2 \
+    --values "https://raw.githubusercontent.com/kromanow94/kubeflow-manifests/${TARGET_REVISION}/example/helm/values.cluster-local-gateway.yaml" \
+    --wait
+
 # Metacontroller #
 helm upgrade --install metacontroller oci://ghcr.io/metacontroller/metacontroller-helm \
     --namespace metacontroller \

@@ -1,4 +1,4 @@
-{{- if .Values.knativeIntegration.knativeServing.enabled }}
+{{- if (include "kubeflow.knativeIntegration.knativeServing.enabled" .) }}
 
 apiVersion: operator.knative.dev/v1beta1
 kind: KnativeServing
@@ -7,4 +7,5 @@ metadata:
   namespace: {{ .Values.knativeIntegration.knativeServing.namespace }}
 spec:
   {{- toYaml .Values.knativeIntegration.knativeServing.operatorSpec | nindent 2 -}}
+
 {{- end }}
