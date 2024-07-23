@@ -10,6 +10,7 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
+    namespace: knative
   project: default
   sources:
     - repoURL: https://github.com/knative/operator
@@ -34,3 +35,5 @@ spec:
         factor: 2
         maxDuration: 10m
       limit: 5
+    syncOptions:
+      - CreateNamespace=true
