@@ -129,7 +129,8 @@ helm upgrade --install argo-workflows argo-workflows \
 kubectl apply -f "https://raw.githubusercontent.com/kromanow94/kubeflow-manifests/${TARGET_REVISION}/example/helm/namespace.knative-serving.yaml"
 kubectl apply -f "https://raw.githubusercontent.com/kromanow94/kubeflow-manifests/${TARGET_REVISION}/example/helm/namespace.knative-eventing.yaml"
 helm upgrade --install knative-operator "${KNATIVE_OPERATOR_HELM_CHART_ARCHIVE_URL}" \
-    --namespace: knative \
+    --namespace knative \
+    --create-namespace \
     --wait
 
 # KServe CRDs #
