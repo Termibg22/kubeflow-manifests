@@ -14,7 +14,7 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/knative/operator
-      targetRevision: knative-v1.11.0
+      targetRevision: knative-v1.11.12
       path: config/default
       kustomize:
         namespace: knative-operator
