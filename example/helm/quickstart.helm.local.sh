@@ -127,7 +127,7 @@ helm upgrade --install argo-workflows argo-workflows \
 kubectl apply -f namespace.knative-serving.yaml
 kubectl apply -f namespace.knative-eventing.yaml
 helm upgrade --install knative-operator "${KNATIVE_OPERATOR_HELM_CHART_ARCHIVE_URL}" \
-    --namespace knative \
+    --namespace knative-operator \
     --create-namespace \
     --wait
 
